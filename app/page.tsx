@@ -1,3 +1,7 @@
+"use client";
+
+
+import { useEffect, useState } from "react";
 import { 
   Cloud, 
   Sun, 
@@ -17,17 +21,36 @@ import {
   Sparkles
 } from "lucide-react";
 
+const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 const Index = () => {
-  // Mock weather data
-  const currentWeather = {
-    location: "San Francisco",
-    country: "California, USA",
-    temperature: 24,
-    condition: "Partly Cloudy",
-    high: 28,
-    low: 18,
-    feelsLike: 26,
+
+  const [currentWeather, setCurrentWeather] = useState<any>(null);
+
+useEffect(() => {
+  const fetchWeather = async () => {
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=Mumbai&units=metric&appid=${API_KEY}`
+      );
+
+      const data = await res.json();
+
+      setCurrentWeather({
+        location: data.name,
+        country: data.sys.country,
+        temperature: Math.round(data.main.temp),
+        condition: data.weather[0].main,
+        high: Math.round(data.main.temp_max),
+        low: Math.round(data.main.temp_min),
+        feelsLike: Math.round(data.main.feels_like),
+      });
+    } catch (error) {
+      console.error("Weather API error:", error);
+    }
   };
+
+  fetchWeather();
+}, []);
 
   const hourlyForecast = [
     { time: "Now", temp: 24, icon: "sun" },
@@ -74,7 +97,15 @@ const Index = () => {
     }
   };
 
+  if (!currentWeather) {
   return (
+    <div className="min-h-screen flex items-center justify-center text-xl">
+      Loading weather...
+    </div>
+  );
+}
+
+return (
     <div className="min-h-screen p-4 md:p-8 lg:p-12 perspective-1000 relative">
       
       {/* 3D Layered Background */}
