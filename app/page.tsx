@@ -21,6 +21,7 @@ import {
   Sparkles
 } from "lucide-react";
 
+
 const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
 
 console.log("API KEY USED BY APP:", API_KEY);

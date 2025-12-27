@@ -8,6 +8,21 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+  border: "hsl(var(--border))",
+  background: "hsl(var(--background))",
+  foreground: "hsl(var(--foreground))",
+  primary: "hsl(var(--primary))",
+  secondary: "hsl(var(--secondary))",
+  accent: "hsl(var(--accent))",
+  muted: "hsl(var(--muted))",
+
+  glass: {
+    border: "rgba(255,255,255,0.15)",
+  },
+},
+
+
       fontFamily: {
         sans: ["var(--font-geist-sans)", "Inter", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "SFMono-Regular", "monospace"],
