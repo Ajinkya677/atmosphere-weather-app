@@ -26,37 +26,46 @@ const Index = () => {
 
   const [currentWeather, setCurrentWeather] = useState<any>(null);
   const [error, setError] = useState(false);
+  const [city, setCity] = useState("");
+
+const searchCity = async () => {
+  if (!city.trim()) return;
+
+  try {
+    const res = await fetch(`/api/weather?city=${city}`);
+    const data = await res.json();
+    setCurrentWeather(data);
+  } catch (err) {
+    setError(true);
+  }
+};
 
 
 useEffect(() => {
-  const fetchWeather = async () => {
-    try {
-      const res = await fetch("/api/weather");
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch weather");
-      }
-
-      const data = await res.json();
-
-      setCurrentWeather({
-        location: data.name,
-        country: data.sys.country,
-        temperature: Math.round(data.main.temp),
-        condition: data.weather[0].main,
-        high: Math.round(data.main.temp_max),
-        low: Math.round(data.main.temp_min),
-        feelsLike: Math.round(data.main.feels_like),
-      });
-    } catch (error) {
-      console.error("Weather error:", error);
-      setCurrentWeather(null);
+  const getLocationWeather = () => {
+    if (!navigator.geolocation) {
       setError(true);
+      return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        const res = await fetch(
+          `/api/weather?lat=${latitude}&lon=${longitude}`
+        );
+
+        const data = await res.json();
+        setCurrentWeather(data);
+      },
+      () => setError(true)
+    );
   };
 
-  fetchWeather();
+  getLocationWeather();
 }, []);
+
 
 
 
@@ -263,10 +272,26 @@ return (
               <p className="text-sm text-muted-foreground">{currentWeather.country}</p>
             </div>
           </div>
-          <button className="neo-button flex items-center gap-3 text-muted-foreground hover:text-foreground group">
-            <Search className="h-5 w-5 transition-transform group-hover:scale-110" />
-            <span className="text-sm font-medium">Search location</span>
-          </button>
+          {/* Search Button */}
+          <div className="flex items-center gap-3">
+  <input
+    type="text"
+    value={city}
+    onChange={(e) => setCity(e.target.value)}
+    placeholder="Search city..."
+    className="px-4 py-2 rounded-lg bg-black/30 border border-white/10 text-white outline-none"
+    onKeyDown={(e) => e.key === "Enter" && searchCity()}
+  />
+
+  <button
+    onClick={searchCity}
+    className="neo-button flex items-center gap-3 text-muted-foreground hover:text-foreground group"
+  >
+    <Search className="h-5 w-5 transition-transform group-hover:scale-110" />
+    <span className="text-sm font-medium">Search</span>
+  </button>
+</div>
+
         </header>
 
         {/* Main Weather Display */}
