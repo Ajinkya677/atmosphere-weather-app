@@ -1,0 +1,319 @@
+[
+  {
+    "id": "TC001",
+    "title": "Load weather data for current GPS location",
+    "description": "Verify the website automatically detects user's current location via GPS and displays correct real-time weather data including current conditions, hourly forecast, daily forecast, and air quality.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the website homepage with location services enabled on the browser"
+      },
+      {
+        "type": "assertion",
+        "description": "Check the app prompts or uses GPS to determine user location"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the displayed current weather data matches the data retrieved for the detected coordinates from the backend"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify hourly forecast for next 8 hours is shown accurately"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify daily 7-day forecast is displayed correctly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify air quality index is shown if available"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm dynamic UI theme changes according to current weather conditions"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm 'last updated' timestamp appears and is accurate"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Search weather by valid city name",
+    "description": "Verify user can search weather data by entering a valid city name, and correct weather information is displayed with full details.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the website homepage"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid city name (e.g., 'London') in the search bar"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify backend API is called with the city query parameter"
+      },
+      {
+        "type": "assertion",
+        "description": "Check current weather, hourly, daily, and air quality data for the city are displayed correctly"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm UI updates with new weather data and background gradients reflecting the city weather"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify 'last updated' timestamp updates accordingly"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Search weather by invalid city name and handle error",
+    "description": "Verify that when the user enters an invalid or non-existent city name, a friendly error message is displayed and the user can retry the search.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the website homepage"
+      },
+      {
+        "type": "action",
+        "description": "Enter an invalid city name (e.g., 'InvalidCity123') in the search bar"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify API returns 404 city not found response"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the UI displays a user-friendly error message such as 'City not found' or similar"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm search input remains available for retrying"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no crash or unresponsive state occurs"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Handle backend server error gracefully",
+    "description": "Verify that if the backend returns a server error (500), the UI shows an appropriate error message to the user and allows retrying.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate backend server error response (HTTP 500) when requesting weather data"
+      },
+      {
+        "type": "action",
+        "description": "Perform a weather search or load by location to trigger API call"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify UI displays a clear error message such as 'Failed to fetch weather' or similar"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the user can retry the request without page reload"
+      },
+      {
+        "type": "assertion",
+        "description": "No app crash or broken UI occurs"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Verify security of API key",
+    "description": "Verify that the OpenWeatherMap API key is stored securely on the server side and is not exposed in client-side code, network requests, or frontend source.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Inspect network requests during API calls from frontend"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure no API key or sensitive secrets appear in request URLs or headers visible to the client"
+      },
+      {
+        "type": "action",
+        "description": "Review frontend source code (browser dev tools) for presence of API key"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify API key is referenced only in server-side environment variables"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm API calls from frontend are routed through backend API proxy endpoints where the key is injected"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Validate detailed weather metrics accuracy and completeness",
+    "description": "Verify that all detailed weather metrics (humidity, wind speed, visibility, pressure, air quality, sun cycle information) are displayed and show accurate values consistent with backend data.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load weather data via location or city search"
+      },
+      {
+        "type": "assertion",
+        "description": "Cross-check each metric visible in UI matches respective value in API JSON response"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify humidity percentage is displayed and within valid range (0 to 100%)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify wind speed units and values are correct and non-negative"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify visibility metric is shown with correct units and range"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify atmospheric pressure is displayed in expected units"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm air quality index is shown if available, or appropriate message if null"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm sunrise and sunset times are displayed and correspond to location/timezone"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Check UI responsiveness and dynamic theme updates",
+    "description": "Verify that UI components render properly on different screen sizes and the background gradient changes dynamically to reflect current weather conditions.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the website on desktop, tablet, and mobile screen sizes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify weather cards, forecast rows, and details grid render consistent and readable layout on each device size"
+      },
+      {
+        "type": "assertion",
+        "description": "Change the weather location to different weather conditions (e.g., sunny, cloudy, rainy)"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the background gradient and glassmorphic effect update dynamically according to weather condition"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure text and UI elements maintain accessibility and contrast across themes"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Verify performance and quick data loading",
+    "description": "Verify that the weather data loads promptly after page load or search and UI updates without significant delay or freezing.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load the main page with location detection enabled"
+      },
+      {
+        "type": "assertion",
+        "description": "Measure time from page load to weather data displayed; it should be within acceptable performance threshold (e.g., under 3 seconds)"
+      },
+      {
+        "type": "action",
+        "description": "Perform a city search and submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Measure time from search submission to UI update with new weather data; it should be prompt and smooth"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that loading skeleton placeholders appear when data is being fetched"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm no layout shifts or flashes occur during data updates"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Verify deployment environment serves the application correctly",
+    "description": "Ensure that the deployed website runs all features correctly, including API calls, UI rendering, and secure environment variables for API keys.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Deploy the application to production environment as per instructions"
+      },
+      {
+        "type": "action",
+        "description": "Open the deployed URL in supported browsers"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify homepage and search page load without errors"
+      },
+      {
+        "type": "assertion",
+        "description": "Check weather data loads accurately by location and city search in the deployed app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify API key is not exposed in production environment client-side code"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm dynamic UI themes function correctly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify ability to view detailed weather metrics and forecasts"
+      },
+      {
+        "type": "assertion",
+        "description": "Check error messages appear appropriately on invalid city or API failures"
+      }
+    ]
+  }
+]

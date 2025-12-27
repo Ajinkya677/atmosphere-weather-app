@@ -1,0 +1,19 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3001",
+  "backendAuthType": "API key",
+  "backendApiKey": "WEATHER_API_KEY",
+  "backendApiValue": "17c86b71bbe82ad908d36ccaf4e1426e",
+  "executionArgs": {
+    "projectName": "atmosphere",
+    "projectPath": "D:\\weather\\atmosphere",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-lqmTndB6vs23zDwMTBK_szjvgSEt5RaApMjyh6C9ztxOS7cYAgqEzjgUmRx6bI68SR1hM23AgQNH3NYdIBh4cOyso_F5E8FttwX3r1NF6_P6YoimNo8kiiOCI4cISFdlMwU"
+    }
+  },
+  "proxy": "http://71b9366b-26cf-4e14-ae17-b939aa455e89:d2hZKOUfUUDhfzUu3zmVzyouzJv9bdfz@tun.testsprite.com:8080"
+}
