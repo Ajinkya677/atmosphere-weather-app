@@ -22,6 +22,9 @@ import {
 } from "lucide-react";
 
 const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
+
+console.log("API KEY USED BY APP:", API_KEY);
+
 const Index = () => {
 
   const [currentWeather, setCurrentWeather] = useState<any>(null);
@@ -34,6 +37,11 @@ useEffect(() => {
       );
 
       const data = await res.json();
+      console.log("Weather API response:", data);
+
+      if (!res.ok) {
+        throw new Error(data.message || "API failed");
+      }
 
       setCurrentWeather({
         location: data.name,
@@ -44,13 +52,18 @@ useEffect(() => {
         low: Math.round(data.main.temp_min),
         feelsLike: Math.round(data.main.feels_like),
       });
+
     } catch (error) {
       console.error("Weather API error:", error);
+      // ✅ STOP infinite loading
+      setCurrentWeather("ERROR");
     }
   };
 
   fetchWeather();
 }, []);
+
+
 
   const hourlyForecast = [
     { time: "Now", temp: 24, icon: "sun" },
@@ -97,13 +110,24 @@ useEffect(() => {
     }
   };
 
-  if (!currentWeather) {
+ if (currentWeather === null) {
   return (
     <div className="min-h-screen flex items-center justify-center text-xl">
       Loading weather...
     </div>
   );
 }
+
+if (currentWeather === "ERROR") {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-xl text-red-400">
+      Failed to load weather
+    </div>
+  );
+}
+
+
+
 
 return (
     <div className="min-h-screen p-4 md:p-8 lg:p-12 perspective-1000 relative">
