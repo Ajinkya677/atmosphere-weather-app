@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { 
   Cloud, 
   Sun, 
@@ -21,13 +21,21 @@ import {
   Sparkles
 } from "lucide-react";
 
+type WeatherDetail = {
+  label: string;
+  value: string;
+  color: string;
+  icon: React.ReactNode;
+};
+
+
 
 const Index = () => {
-
+  
   const [currentWeather, setCurrentWeather] = useState<any>(null);
   const [error, setError] = useState(false);
   const [city, setCity] = useState("");
-
+  
 const searchCity = async () => {
   if (!city.trim()) return;
 
@@ -39,7 +47,47 @@ const searchCity = async () => {
     setError(true);
   }
 };
-
+const hourlyForecast = currentWeather?.hourly ?? [];
+const weeklyForecast = currentWeather?.daily ?? [];
+const weatherDetails = [
+  {
+    label: "Humidity",
+    value: `${currentWeather?.main?.humidity ?? "--"}%`,
+    color: "bg-blue-500/20 text-blue-400",
+    icon: <Droplets className="h-5 w-5" />,
+    bg: "from-blue-500/20 to-blue-500/5",
+    border: "border border-blue-500/20",
+    shadow: "group-hover:shadow-blue-500/20",
+  },
+  {
+    label: "Wind",
+   value: `${currentWeather?.wind?.speed ?? "--"} km/h`,
+    color: "bg-purple-500/20 text-purple-400",
+    icon: <Wind className="h-5 w-5" />,
+    bg: "from-purple-500/20 to-purple-500/5",
+    border: "border border-purple-500/20",
+    shadow: "group-hover:shadow-purple-500/20",
+  },
+  {
+    label: "Visibility",
+   value: `${currentWeather?.visibility ? currentWeather.visibility / 1000 : "--"} km`,
+    color: "bg-cyan-500/20 text-cyan-400",
+    icon: <Eye className="h-5 w-5" />,
+    bg: "from-cyan-500/20 to-cyan-500/5",
+    border: "border border-cyan-500/20",
+    shadow: "group-hover:shadow-cyan-500/20",
+  },
+  {
+    label: "Pressure",
+    value: `${currentWeather?.main?.pressure ?? "--"} hPa`,
+    color: "bg-pink-500/20 text-pink-400",
+    icon: <Gauge className="h-5 w-5" />,
+    bg: "from-pink-500/20 to-pink-500/5",
+    border: "border border-pink-500/20",
+    shadow: "group-hover:shadow-pink-500/20",
+  },
+];
+icon: <Droplets className="h-5 w-5" />
 
 useEffect(() => {
   const getLocationWeather = () => {
@@ -66,59 +114,76 @@ useEffect(() => {
   getLocationWeather();
 }, []);
 
+{/* Hourly Forecast */}
+{currentWeather?.hourly ? (
+  currentWeather.hourly.map((h: any, i: number) => (
+    <div key={i}>{Math.round(h.temp)}°</div>
+  ))
+) : (
+  <p>Loading hourly forecast…</p>
+)}
+
+{/* Weekly Forecast */}
+{currentWeather?.daily ? (
+  currentWeather.daily.map((d: any, i: number) => (
+    <div key={i}>{Math.round(d.temp.max)}°</div>
+  ))
+) : (
+  <p>Loading daily forecast…</p>
+)}
+
+{/* Sun Cycle*/}
+Sunrise: {currentWeather?.current
+  ? new Date(currentWeather.current.sunrise * 1000).toLocaleTimeString()
+  : "--"}
+
+Sunset: {currentWeather?.current
+  ? new Date(currentWeather.current.sunset * 1000).toLocaleTimeString()
+  : "--"}
 
 
+{/*Air Quality*/}
+AQI: {currentWeather?.air?.main?.aqi ?? "--"}
 
 
-  const hourlyForecast = [
-    { time: "Now", temp: 24, icon: "sun" },
-    { time: "2PM", temp: 26, icon: "sun" },
-    { time: "3PM", temp: 27, icon: "cloud-sun" },
-    { time: "4PM", temp: 28, icon: "cloud-sun" },
-    { time: "5PM", temp: 26, icon: "cloud" },
-    { time: "6PM", temp: 24, icon: "sunset" },
-    { time: "7PM", temp: 22, icon: "moon" },
-    { time: "8PM", temp: 20, icon: "cloud-moon" },
-  ];
+{/* Weather Details*/}
+const getIconFromAPI = (
+  condition: string,
+  size = 24,
+  className = ""
+) => {
+  const iconProps = { size, className };
 
-  const weeklyForecast = [
-    { day: "Today", high: 28, low: 18, icon: "cloud-sun", condition: "Partly Cloudy" },
-    { day: "Tomorrow", high: 30, low: 20, icon: "sun", condition: "Sunny" },
-    { day: "Wednesday", high: 26, low: 17, icon: "cloud-rain", condition: "Light Rain" },
-    { day: "Thursday", high: 24, low: 16, icon: "cloud-rain", condition: "Rainy" },
-    { day: "Friday", high: 27, low: 18, icon: "cloud-sun", condition: "Partly Cloudy" },
-    { day: "Saturday", high: 29, low: 19, icon: "sun", condition: "Sunny" },
-    { day: "Sunday", high: 31, low: 21, icon: "sun", condition: "Clear" },
-  ];
+switch (condition?.toLowerCase()) {
 
-  const weatherDetails = [
-    { label: "Humidity", value: "65%", icon: Droplets, color: "primary" },
-    { label: "Wind", value: "12 km/h", icon: Wind, color: "accent" },
-    { label: "Visibility", value: "10 km", icon: Eye, color: "primary" },
-    { label: "Pressure", value: "1015 hPa", icon: Gauge, color: "accent" },
-    { label: "Feels Like", value: "26°", icon: Thermometer, color: "weather-warm" },
-    { label: "UV Index", value: "6 High", icon: Sun, color: "weather-warm" },
-  ];
+    case "clear":
+      return <Sun {...iconProps} />;
+    case "clouds":
+      return <Cloud {...iconProps} />;
+    case "rain":
+    case "drizzle":
+      return <CloudRain {...iconProps} />;
+    case "snow":
+      return <Cloud {...iconProps} />;
+    case "thunderstorm":
+      return <CloudRain {...iconProps} />;
+    case "mist":
+    case "fog":
+    case "haze":
+      return <Cloud {...iconProps} />;
+    default:
+      return <Sun {...iconProps} />;
+  }
+};
 
-  const getIcon = (iconName: string, size: number = 24, className: string = "") => {
-    const iconProps = { size, className };
-    switch (iconName) {
-      case "sun": return <Sun {...iconProps} />;
-      case "cloud": return <Cloud {...iconProps} />;
-      case "cloud-sun": return <CloudSun {...iconProps} />;
-      case "cloud-rain": return <CloudRain {...iconProps} />;
-      case "cloud-moon": return <CloudMoon {...iconProps} />;
-      case "moon": return <Moon {...iconProps} />;
-      case "sunset": return <Sunset {...iconProps} />;
-      case "sunrise": return <Sunrise {...iconProps} />;
-      default: return <Sun {...iconProps} />;
-    }
-  };
+{getIconFromAPI(currentWeather?.current?.weather?.[0]?.main, 36, "text-primary")}
+
+
 
  if (error) {
   return (
     <div className="min-h-screen flex items-center justify-center text-red-500">
-      Failed to load weather
+      Failed to load currentweather
     </div>
   );
 }
@@ -126,7 +191,7 @@ useEffect(() => {
 if (!currentWeather) {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      Loading weather...
+      Loading currentweather...
     </div>
   );
 }
@@ -181,7 +246,7 @@ return (
         <div 
           className="absolute bottom-[15%] left-[25%] w-80 h-80 rounded-full opacity-20"
           style={{
-            background: 'linear-gradient(45deg, hsl(var(--weather-warm)) 0%, transparent 60%)',
+            background: 'linear-gradient(45deg, hsl(var(--currentweather-warm)) 0%, transparent 60%)',
             filter: 'blur(70px)',
             transform: 'translateZ(-120px)',
             animation: 'float-3d 18s ease-in-out infinite 2s',
@@ -426,7 +491,7 @@ return (
             Hourly Forecast
           </h3>
           <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide">
-            {hourlyForecast.map((hour, index) => (
+            {hourlyForecast.map((hour: any, index: number) => (
               <div
                 key={index}
                 className={`flex min-w-[90px] flex-col items-center gap-4 rounded-2xl p-5 transition-all duration-500 ${
@@ -440,7 +505,7 @@ return (
                   {hour.time}
                 </span>
                 <div className={index === 0 ? "weather-icon-cool-glow" : "icon-3d"}>
-                  {getIcon(hour.icon, 32, index === 0 ? "text-primary" : "text-foreground/80")}
+                  {getIconFromAPI(hour.icon, 32, index === 0 ? "text-primary" : "text-foreground/80")}
                 </div>
                 <span className={`text-xl font-bold ${index === 0 ? "text-primary" : "text-foreground"}`}>
                   {hour.temp}°
@@ -459,7 +524,7 @@ return (
               7-Day Forecast
             </h3>
             <div className="space-y-2">
-              {weeklyForecast.map((day, index) => (
+              {weeklyForecast.map((day: any, index: number) => (
                 <div
                   key={index}
                   className={`flex items-center justify-between rounded-xl p-4 transition-all duration-500 ${
@@ -473,7 +538,7 @@ return (
                   </span>
                   <div className="flex items-center gap-3">
                     <div className={index === 0 ? "weather-icon-cool-glow" : "icon-3d"}>
-                      {getIcon(day.icon, 26, index === 0 ? "text-primary" : "text-foreground/70")}
+                      {getIconFromAPI(day.icon, 26, index === 0 ? "text-primary" : "text-foreground/70")}
                     </div>
                     <span className="hidden text-sm text-muted-foreground sm:inline w-28">{day.condition}</span>
                   </div>
@@ -500,20 +565,32 @@ return (
               Weather Details
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              {weatherDetails.map((detail, index) => (
-                <div
-                  key={index}
-                  className="glass-card glass-card-hover flex items-center gap-4 p-5 group"
-                >
-                  <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-${detail.color}/20 to-${detail.color}/5 border border-${detail.color}/20 shadow-lg group-hover:shadow-${detail.color}/20 transition-shadow duration-500`}>
-                    <detail.icon className={`h-7 w-7 text-${detail.color} icon-3d`} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{detail.label}</p>
-                    <p className="text-xl font-bold text-foreground">{detail.value}</p>
-                  </div>
-                </div>
-              ))}
+            {weatherDetails.map((detail, index) => (
+  <div
+    key={index}
+    className="glass-card glass-card-hover flex items-center gap-4 p-5 group"
+  >
+    <div
+      className={`flex h-14 w-14 items-center justify-center rounded-2xl 
+      bg-gradient-to-br ${detail.bg} 
+      ${detail.border} 
+      shadow-lg ${detail.shadow} 
+      transition-shadow duration-500`}
+    >
+      {detail.icon}
+    </div>
+
+    <div>
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        {detail.label}
+      </p>
+      <p className="text-xl font-bold text-foreground">
+        {detail.value}
+      </p>
+    </div>
+  </div>
+))}
+
             </div>
           </div>
         </div>
