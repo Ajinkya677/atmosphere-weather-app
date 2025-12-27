@@ -22,27 +22,22 @@ import {
 } from "lucide-react";
 
 
-const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
-
-console.log("API KEY USED BY APP:", API_KEY);
-
 const Index = () => {
 
   const [currentWeather, setCurrentWeather] = useState<any>(null);
+  const [error, setError] = useState(false);
+
 
 useEffect(() => {
   const fetchWeather = async () => {
     try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=Mumbai&units=metric&appid=${API_KEY}`
-      );
-
-      const data = await res.json();
-      console.log("Weather API response:", data);
+      const res = await fetch("/api/weather");
 
       if (!res.ok) {
-        throw new Error(data.message || "API failed");
+        throw new Error("Failed to fetch weather");
       }
+
+      const data = await res.json();
 
       setCurrentWeather({
         location: data.name,
@@ -53,16 +48,16 @@ useEffect(() => {
         low: Math.round(data.main.temp_min),
         feelsLike: Math.round(data.main.feels_like),
       });
-
     } catch (error) {
-      console.error("Weather API error:", error);
-      // ✅ STOP infinite loading
-      setCurrentWeather("ERROR");
+      console.error("Weather error:", error);
+      setCurrentWeather(null);
+      setError(true);
     }
   };
 
   fetchWeather();
 }, []);
+
 
 
 
@@ -111,21 +106,22 @@ useEffect(() => {
     }
   };
 
- if (currentWeather === null) {
+ if (error) {
   return (
-    <div className="min-h-screen flex items-center justify-center text-xl">
+    <div className="min-h-screen flex items-center justify-center text-red-500">
+      Failed to load weather
+    </div>
+  );
+}
+
+if (!currentWeather) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
       Loading weather...
     </div>
   );
 }
 
-if (currentWeather === "ERROR") {
-  return (
-    <div className="min-h-screen flex items-center justify-center text-xl text-red-400">
-      Failed to load weather
-    </div>
-  );
-}
 
 
 
