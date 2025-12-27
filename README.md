@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌦️ Atmosphere – Weather Website
 
-## Getting Started
+Atmosphere is my **first personal web development project**, created to understand how real-world projects work using **Git, GitHub, APIs, and modern frontend tools**.
 
-First, run the development server:
+This project helped me learn:
+- How Git & GitHub work
+- How to structure a real project
+- How APIs are used in websites
+- How environment variables work
+- How frontend and backend connect
+
+> ⚠️ This project is **not deployed yet**. Deployment will be done in the future as I continue learning.
+
+---
+
+## 🚀 Project Overview
+
+Atmosphere is a weather website that fetches **real-time weather data** using the **OpenWeather API**.  
+It can show weather based on:
+- User’s current location (via browser permission)
+- City search (work in progress)
+
+---
+
+## ✨ Features (Current)
+
+- 🌍 Current location weather (GPS-based)
+- 🌡️ Temperature & weather condition
+- 🕒 Hourly weather forecast (limited)
+- 💧 Humidity
+- 🌬️ Wind speed
+- 👁️ Visibility
+- ⚖️ Pressure
+- 🫁 Air Quality Index (AQI)
+- 🕓 Last updated time (updates on refresh)
+- 🎨 Modern UI with icons & cards
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js (App Router), React, TypeScript  
+- **Styling:** Tailwind CSS  
+- **Icons:** Lucide React  
+- **Backend:** Next.js API Routes  
+- **API:** OpenWeather API  
+- **Version Control:** Git & GitHub  
+
+---
+
+## 🔐 API & Security
+
+- OpenWeather API key is stored using **environment variables**
+- API requests are handled on the **server side**
+- API key is **not exposed** in frontend code
+
+---
+
+## 📂 Project Purpose
+
+This project was built mainly to:
+- Learn **Git & GitHub workflow**
+- Understand **commits, branches, resets**
+- Learn how APIs are integrated
+- Gain confidence in building real projects
+
+It is **not a production app**, but a **learning project**.
+
+---
+
+## 🚧 Work in Progress / Future Plans
+
+- 🔍 City search functionality
+- 📅 Proper 7-day forecast
+- ⚠️ Better error handling
+- 📱 Improved mobile UI
+- 🚀 Deployment on Vercel
+- 🌗 Dark / Light mode
+
+----
+
+## 📌 How to Run Locally
 
 ```bash
+git clone <repository-url>
+cd atmosphere
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
